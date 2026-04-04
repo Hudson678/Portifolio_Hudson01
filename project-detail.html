@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>HD Studio | Detalhes do Projeto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor Premium */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: #e50914;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-ring {
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            border: 1.5px solid rgba(229, 9, 20, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(2px);
+        }
+
+        .cursor-dot.hover-active {
+            transform: translate(-50%, -50%) scale(2.5);
+            background-color: #e50914;
+            box-shadow: 0 0 12px rgba(229, 9, 20, 0.6);
+        }
+
+        .cursor-ring.hover-active {
+            transform: translate(-50%, -50%) scale(1.8);
+            border-color: rgba(229, 9, 20, 0.8);
+            width: 40px;
+            height: 40px;
+            background: rgba(229, 9, 20, 0.05);
+        }
+
+        /* Sakura Particles Container */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            overflow: hidden;
+        }
+
+        .sakura-particle {
+            position: absolute;
+            pointer-events: none;
+            will-change: transform;
+            opacity: 0;
+            animation: sakuraFloat linear infinite;
+        }
+
+        @keyframes sakuraFloat {
+            0% {
+                transform: translateX(0) translateY(-10vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.35;
+            }
+            90% {
+                opacity: 0.35;
+            }
+            100% {
+                transform: translateX(var(--drift, 50px)) translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Image Modal (Zoom) */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(8px);
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+        }
+
+        .image-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+            animation: modalZoomIn 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes modalZoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 40px;
+            height: 40px;
+            background: #e50914;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+            background: #ff2a2a;
+        }
+
+        @media (max-width: 768px) {
+            .modal-close {
+                top: -50px;
+                right: 0;
+            }
+            .modal-content img {
+                max-height: 70vh;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 1;
+            pointer-events: all;
+        }
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-text {
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            font-weight: 300;
+            color: #e50914;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            animation: pulseRed 1.2s infinite ease;
+        }
+        .loader-bar {
+            width: 160px;
+            height: 2px;
+            background: #2a2a2a;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background: #e50914;
+            animation: loadProgress 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        @keyframes pulseRed {
+            0% { opacity: 0.4; text-shadow: 0 0 0px #e50914; }
+            100% { opacity: 1; text-shadow: 0 0 8px #e50914; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background: rgba(10, 10, 10, 0.6);
+            border-bottom: 1px solid rgba(229, 9, 20, 0.2);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        nav.scrolled {
+            padding: 14px 40px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            color: white;
+            transition: opacity 0.3s ease;
+        }
+        .logo:hover {
+            opacity: 0.85;
+        }
+        .logo img {
+            height: 32px;
+            width: auto;
+            display: block;
+        }
+
+        .back-link {
+            color: #e50914;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            position: relative;
+        }
+        .back-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #e50914;
+            transition: width 0.3s ease;
+        }
+        .back-link:hover {
+            color: #ff3b3b;
+            gap: 12px;
+        }
+        .back-link:hover::after {
+            width: 100%;
+        }
+
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+        section:nth-child(4) { animation-delay: 0.4s; }
+        section:nth-child(5) { animation-delay: 0.5s; }
+        section:nth-child(6) { animation-delay: 0.6s; }
+        section:nth-child(7) { animation-delay: 0.7s; }
+
+        .hero-section {
+            padding-top: 100px;
+        }
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff, #ffffff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            position: relative;
+            display: inline-block;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: #e50914;
+            transition: width 0.4s ease;
+        }
+        h2:hover::after {
+            width: 100%;
+        }
+        p {
+            color: #b0b0b0;
+            line-height: 1.7;
+            font-size: 1rem;
+            max-width: 800px;
+        }
+
+        .cover-wrapper {
+            margin-bottom: 48px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.5s ease;
+        }
+        .cover-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 50px rgba(229, 9, 20, 0.15);
+        }
+        .cover-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .cover-wrapper:hover .cover-image {
+            transform: scale(1.02);
+        }
+
+        .identity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+        .identity-card {
+            background: linear-gradient(145deg, #111, #1a1a1a);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+        }
+        .identity-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(229, 9, 20, 0.4);
+            box-shadow: 0 20px 35px -12px rgba(229, 9, 20, 0.2);
+        }
+        .identity-card .logo-img {
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+            background: #0a0a0a;
+            transition: transform 0.5s ease;
+        }
+        .identity-card:hover .logo-img {
+            transform: scale(1.02);
+        }
+        .identity-card .image-label {
+            padding: 16px;
+            text-align: center;
+            color: #b0b0b0;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            transition: color 0.3s ease;
+        }
+        .identity-card:hover .image-label {
+            color: #e50914;
+        }
+
+        .palette-image-wrapper {
+            margin-top: 30px;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .palette-image-wrapper:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.2), 0 30px 60px rgba(0,0,0,0.6);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+        .palette-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .palette-image-wrapper:hover .palette-image {
+            transform: scale(1.02);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+        .image-card {
+            background: linear-gradient(145deg, #111, #1a1a1a);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+        }
+        .image-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(229, 9, 20, 0.5);
+            box-shadow: 0 20px 35px -12px rgba(229, 9, 20, 0.25);
+        }
+        .image-card.social img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1080 / 1080;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .image-card.mockup img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .image-card:hover img {
+            transform: scale(1.03);
+        }
+        .image-label {
+            padding: 14px 16px;
+            text-align: center;
+            color: #b0b0b0;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.3);
+            transition: color 0.3s ease;
+        }
+        .image-card:hover .image-label {
+            color: #e50914;
+        }
+
+        .btn-voltar {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid #e50914;
+            color: #fff;
+            padding: 12px 32px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 1;
+            text-decoration: none;
+            margin-top: 20px;
+            border-radius: 1px;
+        }
+        .btn-voltar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #e50914;
+            transition: left 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: -1;
+        }
+        .btn-voltar:hover {
+            color: #0a0a0a;
+            border-color: #e50914;
+            box-shadow: 0 0 18px rgba(229, 9, 20, 0.5);
+            transform: translateY(-2px);
+        }
+        .btn-voltar:active {
+            transform: translateY(0);
+        }
+        .btn-voltar:hover::before {
+            left: 0;
+        }
+
+        .conclusion-wrapper {
+            text-align: center;
+        }
+        .conclusion-wrapper p {
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            color: #6a6a6a;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(229,9,20,0.1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e50914;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff2a2a;
+        }
+
+        @media (max-width: 768px) {
+            body { cursor: auto; }
+            .cursor-dot, .cursor-ring { display: none; }
+            nav {
+                padding: 15px 20px;
+            }
+            nav.scrolled {
+                padding: 12px 20px;
+            }
+            .container {
+                padding: 0 16px;
+            }
+            .hero-section {
+                padding-top: 80px;
+            }
+            section {
+                padding: 50px 0;
+            }
+            h1 {
+                font-size: 2rem;
+                background: none;
+                -webkit-text-fill-color: #fff;
+            }
+            h2 {
+                font-size: 1.4rem;
+            }
+            .cover-image {
+                height: 250px;
+            }
+            .identity-card .logo-img {
+                height: 150px;
+                padding: 20px;
+                object-fit: contain;
+            }
+            .grid-3 {
+                gap: 16px;
+            }
+            a, button, .btn-voltar, .back-link {
+                cursor: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sakura-container" id="sakuraContainer"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Image Modal (Zoom) -->
+<div class="image-modal" id="imageModal">
+    <div class="modal-content">
+        <div class="modal-close" id="modalClose">×</div>
+        <img id="modalImage" src="" alt="Imagem ampliada">
+    </div>
+</div>
+
+<div class="loader" id="loader">
+    <div class="loader-text">CARREGANDO PROJETO</div>
+    <div class="loader-bar"><div class="loader-progress"></div></div>
+</div>
+
+<nav id="main-nav">
+    <a href="index.html" class="logo">
+        <img src="images/inicial/logo.png" alt="HD Studio Logo">
+    </a>
+    <a href="index.html" class="back-link">← Voltar ao portfólio</a>
+</nav>
+
+<main id="project-content">
+    <div style="text-align: center; padding: 100px 20px; color: #9a9a9a;">
+        Carregando informações do projeto...
+    </div>
+</main>
+
+<footer>
+    <p>HD STUDIO — Hudson Moraes | Design Gráfico e Branding © 2026</p>
+    <p style="margin-top: 12px; letter-spacing: 1px;">Transformando ideias em experiências visuais</p>
+</footer>
+
+<script>
+    // Image Modal Functions
+    function initImageModal() {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.getElementById('modalClose');
+        
+        function openModal(imgSrc) {
+            modalImg.src = imgSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        closeBtn.addEventListener('click', closeModal);
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+        
+        return { openModal };
+    }
+    
+    // Sakura Particles
+    function createSakuraParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'sakura-particle';
+        
+        const size = 12 + Math.random() * 10;
+        const opacityBase = 0.15 + Math.random() * 0.2;
+        const driftX = (Math.random() - 0.5) * 150;
+        const duration = 8 + Math.random() * 12;
+        const delay = Math.random() * 20;
+        const startX = Math.random() * window.innerWidth;
+        
+        particle.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C12 2 8 6 8 10C8 13 10 15 12 16C14 15 16 13 16 10C16 6 12 2 12 2Z" fill="#e50914" fill-opacity="${opacityBase}" stroke="#e50914" stroke-width="0.5" stroke-opacity="0.3"/>
+            <path d="M12 22C12 22 8 18 8 14C8 11 10 9 12 8C14 9 16 11 16 14C16 18 12 22 12 22Z" fill="#e50914" fill-opacity="${opacityBase * 0.6}" stroke="#e50914" stroke-width="0.3" stroke-opacity="0.2"/>
+        </svg>`;
+        
+        particle.style.left = startX + 'px';
+        particle.style.top = '-20px';
+        particle.style.setProperty('--drift', driftX + 'px');
+        particle.style.animation = `sakuraFloat ${duration}s linear infinite`;
+        particle.style.animationDelay = `${delay}s`;
+        
+        return particle;
+    }
+
+    function initSakuraParticles() {
+        const container = document.getElementById('sakuraContainer');
+        if (!container) return;
+        
+        const particleCount = window.innerWidth < 768 ? 12 : 24;
+        
+        for (let i = 0; i < particleCount; i++) {
+            setTimeout(() => {
+                const particle = createSakuraParticle();
+                container.appendChild(particle);
+            }, i * 200);
+        }
+        
+        setInterval(() => {
+            if (container.children.length < particleCount - 3) {
+                const newParticle = createSakuraParticle();
+                container.appendChild(newParticle);
+            }
+        }, 8000);
+    }
+
+    // Custom Cursor
+    function initCustomCursor() {
+        const cursorDot = document.getElementById('cursorDot');
+        const cursorRing = document.getElementById('cursorRing');
+        
+        if (!cursorDot || !cursorRing) return;
+        
+        let mouseX = 0, mouseY = 0;
+        let ringX = 0, ringY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+        });
+        
+        function animateRing() {
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
+        
+        const interactiveElements = document.querySelectorAll('a, .btn-voltar, .back-link, .identity-card, .image-card');
+        
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hover-active');
+                cursorRing.classList.add('hover-active');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hover-active');
+                cursorRing.classList.remove('hover-active');
+            });
+        });
+        
+        document.addEventListener('mouseleave', () => {
+            cursorDot.style.opacity = '0';
+            cursorRing.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', () => {
+            cursorDot.style.opacity = '1';
+            cursorRing.style.opacity = '1';
+        });
+    }
+
+    // Header scroll effect
+    function initHeaderScroll() {
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    }
+
+    // Project Database
+    const projectsDatabase = {
+        "aura-brand": {
+            name: "Hd Studio",
+            cover: "images/hdstudio/capahdstudio.png",
+            about: "O HD Studio é um estúdio de design focado em identidade visual e experiências digitais. O projeto foi desenvolvido para criar uma marca moderna, autoral e com posicionamento premium, transmitindo profissionalismo e criatividade de forma clara e impactante.",
+            concept: "O conceito explora minimalismo sofisticado com alto contraste, combinando base escura, tipografia forte e elementos limpos. A proposta é transmitir clareza, elegância e presença marcante.",
+            logos: [
+                { img: "images/hdstudio/hdstudiologo.png", label: "Logo Principal" },
+                { img: "images/hdstudio/hdstudiohorizontal.png", label: "Variação Horizontal" },
+                { img: "images/hdstudio/hdstudiologosimples.png", label: "Ícone Simplificado" }
+            ],
+            paletteImage: "images/hdstudio/paleta.png",
+            socialPosts: [
+                "images/hdstudio/post1.png",
+                "images/hdstudio/post2.png",
+                "images/hdstudio/post3.png"
+            ],
+            mockups: [
+                "images/hdstudio/outdoor.png",
+                "images/hdstudio/insta.png",
+                "images/hdstudio/cards.png"
+            ],
+            conclusion: "O resultado é uma identidade visual consistente e memorável, que reforça o posicionamento premium do HD Studio e aumenta seu potencial de conexão com clientes."
+        },
+        "nexus-digital": {
+            name: "Astro Lume",
+            cover: "images/astrolume/capa.png",
+            about: "Astro Lume é uma plataforma educacional inovadora que transforma o aprendizado em uma verdadeira jornada pelo universo do conhecimento. Inspirado na ideia de 'galáxias dos sonhos', o projeto conecta educação, tecnologia e propósito, guiando cada usuário por trilhas personalizadas.",
+            concept: "Visualmente e conceitualmente, a marca se apoia em elementos como profundidade, brilho, movimento e expansão, reforçando a ideia de um aprendizado vivo, dinâmico e sem limites.",
+            logos: [
+                { img: "images/astrolume/logoprincipal.png", label: "Logo Principal" },
+                { img: "images/astrolume/logohorizontal.png", label: "Variação Horizontal" },
+                { img: "images/astrolume/icone.png", label: "Ícone Simplificado" }
+            ],
+            paletteImage: "images/astrolume/paleta.png",
+            socialPosts: [
+                "images/astrolume/post1.png",
+                "images/astrolume/post2.png",
+                "images/astrolume/post3.png"
+            ],
+            mockups: [
+                "images/astrolume/celular.png",
+                "images/astrolume/notebook.png",
+                "images/astrolume/poster.png"
+            ],
+            conclusion: "O Astro Lume foi criado com o objetivo de reinventar a forma de aprender, unindo criatividade, tecnologia e propósito para desenvolver uma experiência educacional mais envolvente, acessível e alinhada com o futuro."
+        },
+        "sakura-cafe": {
+            name: "Império da Brasa",
+            cover: "images/imperio/capa.png",
+            about: "O Império da Brasa é uma marca de churrascaria criada para transmitir força, tradição e qualidade. Seu posicionamento busca destacar a experiência gastronômica premium, valorizando o sabor, o fogo e a essência do churrasco.",
+            concept: "O conceito visual é baseado no contraste entre o escuro e o calor da brasa, utilizando elementos minimalistas que remetem ao fogo, intensidade e sofisticação.",
+            logos: [
+                { img: "images/imperio/logo.png", label: "Logo Principal" },
+                { img: "images/imperio/logohorizontal.png", label: "Variação Horizontal" },
+                { img: "images/imperio/icone.png", label: "Ícone Simplificado" }
+            ],
+            paletteImage: "images/imperio/paleta.png",
+            socialPosts: [
+                "images/imperio/post1.png",
+                "images/imperio/post2.png",
+                "images/imperio/post3.png"
+            ],
+            mockups: [
+                "images/imperio/churrascaria.png",
+                "images/imperio/cardapio.png",
+                "images/imperio/caixa.png"
+            ],
+            conclusion: "O projeto entrega uma identidade forte, moderna e alinhada ao universo gastronômico, posicionando o Império da Brasa como uma marca visualmente atraente e consistente."
+        }
+    };
+
+    function renderProjectPage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('id');
+        
+        if (!projectId || !projectsDatabase[projectId]) {
+            document.getElementById('project-content').innerHTML = `
+                <div class="container" style="text-align: center; padding: 100px 20px;">
+                    <h1>Projeto não encontrado</h1>
+                    <p style="margin: 20px 0; color: #9a9a9a;">Desculpe, o projeto que você está procurando não existe ou foi removido.</p>
+                    <a href="index.html" class="btn-voltar" style="display: inline-block; margin-top: 30px;">Voltar ao portfólio</a>
+                </div>
+            `;
+            return;
+        }
+
+        const project = projectsDatabase[projectId];
+        const modalHandler = initImageModal();
+        
+        let identityHtml = '<div class="identity-grid">';
+        project.logos.forEach((logo) => {
+            identityHtml += `
+                <div class="identity-card" data-image="${logo.img}">
+                    <img class="logo-img" src="${logo.img}" alt="${logo.label}">
+                    <div class="image-label">${logo.label}</div>
+                </div>
+            `;
+        });
+        identityHtml += '</div>';
+
+        let socialHtml = '';
+        project.socialPosts.forEach((img) => {
+            socialHtml += `
+                <div class="image-card social" data-image="${img}">
+                    <img src="${img}" alt="Social Media Post">
+                    <div class="image-label">Social Media Post</div>
+                </div>
+            `;
+        });
+
+        let mockupsHtml = '';
+        project.mockups.forEach((img, index) => {
+            mockupsHtml += `
+                <div class="image-card mockup" data-image="${img}">
+                    <img src="${img}" alt="Mockup ${index + 1}">
+                    <div class="image-label">Aplicação ${index + 1}</div>
+                </div>
+            `;
+        });
+
+        const fullHtml = `
+            <div class="container hero-section">
+                <div class="cover-wrapper">
+                    <img class="cover-image" src="${project.cover}" alt="${project.name}">
+                </div>
+                <h1>${project.name}</h1>
+            </div>
+
+            <section>
+                <div class="container">
+                    <h2>Sobre o projeto</h2>
+                    <p>${project.about}</p>
+                </div>
+            </section>
+
+            <section>
+                <div class="container">
+                    <h2>Conceito</h2>
+                    <p>${project.concept}</p>
+                </div>
+            </section>
+
+            <section>
+                <div class="container">
+                    <h2>Identidade Visual</h2>
+                    ${identityHtml}
+                </div>
+            </section>
+
+            <section>
+                <div class="container">
+                    <h2>Paleta de Cores</h2>
+                    <div class="palette-image-wrapper" data-image="${project.paletteImage}">
+                        <img class="palette-image" src="${project.paletteImage}" alt="Paleta de Cores - ${project.name}">
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="container">
+                    <h2>Social Media</h2>
+                    <div class="grid-3">
+                        ${socialHtml}
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="container">
+                    <h2>Aplicações</h2>
+                    <div class="grid-3">
+                        ${mockupsHtml}
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="container conclusion-wrapper">
+                    <h2>Conclusão</h2>
+                    <p>${project.conclusion}</p>
+                    <div style="margin-top: 40px;">
+                        <a href="index.html" class="btn-voltar">← Voltar ao portfólio</a>
+                    </div>
+                </div>
+            </section>
+        `;
+
+        document.getElementById('project-content').innerHTML = fullHtml;
+        
+        // Add click event listeners to all zoomable images
+        const zoomableElements = document.querySelectorAll('.identity-card, .image-card, .palette-image-wrapper');
+        zoomableElements.forEach(el => {
+            el.addEventListener('click', (e) => {
+                const imgSrc = el.getAttribute('data-image');
+                if (imgSrc) {
+                    modalHandler.openModal(imgSrc);
+                }
+            });
+        });
+    }
+
+    // Initialize everything
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            if (loader) loader.classList.add('hidden');
+        }, 800);
+        
+        renderProjectPage();
+        initHeaderScroll();
+        
+        setTimeout(() => {
+            initSakuraParticles();
+            if (window.innerWidth > 768) {
+                initCustomCursor();
+            }
+        }, 100);
+    });
+</script>
+</body>
+</html>
